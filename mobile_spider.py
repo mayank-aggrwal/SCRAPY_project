@@ -5,11 +5,14 @@ class MySpider(scrapy.Spider):
 
     name = "mobile_spider"
     cnt = 0
+    total_pages = 0
     
     def start_requests(self):
-        urls = [
-            "https://www.flipkart.com/search?q=redmi&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&page=1",
-        ]
+        url_to_scrape = input("Enter flipkart url to scrape: ")
+        num_of_pages = int(input("Enter number of pages to scrape: "))
+        self.total_pages = num_of_pages
+        urls = []
+        urls.append(url_to_scrape)
         for url in urls:
             yield scrapy.Request(url = url, callback = self.parse)
     
@@ -36,7 +39,7 @@ class MySpider(scrapy.Spider):
             next_page_id = pages[1]
             self.log(next_page_id)
 
-        if self.cnt < 5:
+        if self.cnt < self.total_pages:
             if next_page_id is not None:
                 next_page = response.urljoin(next_page_id)
                 self.log(next_page)
